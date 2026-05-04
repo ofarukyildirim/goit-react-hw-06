@@ -2,18 +2,29 @@ import { useId } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import css from "./ContactForm.module.css";
+import { addContact } from "../../redux/contactsSlice";
+import { useDispatch } from "react-redux";
+import { nanoid } from "nanoid/non-secure";
 
 const schema = yup.object({
   name: yup.string().min(3).max(50).required(),
   number: yup.string().min(3).max(50).required(),
 });
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = () => {
   const nameId = useId();
   const numberId = useId();
+  const dispatch = useDispatch();
 
   const handleSubmit = (values, actions) => {
-    onSubmit(values.name, values.number);
+    dispatch(
+      addContact({
+        id: nanoid(),
+        name: values.name,
+        number: values.number,
+      }),
+    );
+
     actions.resetForm();
   };
 
